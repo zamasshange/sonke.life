@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:mitchy.webflow.io)",
+      "Bash(ls -la \"C:\\\\Users\\\\Lenovo\\\\Downloads\\\\b_5DGdZhXGRWy\")",
+      "Bash(dir \"C:\\\\Users\\\\Lenovo\\\\Downloads\\\\b_5DGdZhXGRWy\")",
+      "WebSearch",
+      "WebFetch(domain:pentaclay.com)",
+      "WebFetch(domain:webflow.com)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(curl -s http://localhost:3002)",
+      "Bash(findstr \"86efac F43C00\")",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(netstat -ano)",
+      "Bash(findstr \":3000 :3001 :3002\")",
+      "Bash(taskkill /F /PID 2908)",
+      "Bash(taskkill /F /PID 4248)",
+      "Bash(taskkill /F /PID 5600)",
+      "Bash(taskkill //F //PID 2908)",
+      "Bash(taskkill //F //PID 4248)",
+      "Bash(taskkill //F //PID 5600)",
+      "Bash(findstr \"F43C00 86efac\")",
+      "Bash(findstr /I \"F43C00\")",
+      "Bash(findstr \"F43\")"
+    ]
+  }
+}
