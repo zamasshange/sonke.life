@@ -6,9 +6,16 @@ import { ArrowUpRight, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { Country, CostBreakdown, COUNTRIES } from "@/lib/types";
 
 const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?w=1600&q=85&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1600&q=85&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1600&q=85&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1800&q=85&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1556740758-90de374c12ad?w=1800&q=85&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1800&q=85&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1800&q=85&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1800&q=85&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=1800&q=85&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1800&q=85&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1800&q=85&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1800&q=85&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1800&q=85&auto=format&fit=crop",
 ];
 
 interface HeroStats {

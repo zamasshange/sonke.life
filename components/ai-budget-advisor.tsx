@@ -15,6 +15,7 @@ interface AiBudgetAdvisorProps {
 export function AiBudgetAdvisor({ breakdown, monthlyIncome, country }: AiBudgetAdvisorProps) {
   const [advice, setAdvice] = useState<string[]>([]);
   const [source, setSource] = useState<"ai" | "fallback" | null>(null);
+  const [note, setNote] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const countryInfo = COUNTRIES[country];
@@ -47,6 +48,7 @@ export function AiBudgetAdvisor({ breakdown, monthlyIncome, country }: AiBudgetA
   const getAdvice = async () => {
     setIsLoading(true);
     setError("");
+    setNote(null);
 
     try {
       const response = await fetch("/api/ai-advice", {
@@ -62,10 +64,12 @@ export function AiBudgetAdvisor({ breakdown, monthlyIncome, country }: AiBudgetA
       const data = (await response.json()) as {
         source: "ai" | "fallback";
         advice: string[];
+        note?: string;
       };
 
       setAdvice(data.advice);
       setSource(data.source);
+      setNote(typeof data.note === "string" ? data.note : null);
     } catch {
       setError("Sonke could not load advice right now. Try again in a moment.");
     } finally {
@@ -116,6 +120,7 @@ export function AiBudgetAdvisor({ breakdown, monthlyIncome, country }: AiBudgetA
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             {source === "ai" ? "AI suggestions" : "Rule-based suggestions"}
           </p>
+          {note && <p className="text-xs text-muted-foreground">{note}</p>}
           {advice.map((item, index) => (
             <motion.div
               key={`${item}-${index}`}

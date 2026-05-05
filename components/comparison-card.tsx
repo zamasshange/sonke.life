@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Globe } from "lucide-react";
 import { motion } from "framer-motion";
 import { Country, COUNTRIES, CostBreakdown } from "@/lib/types";
+import { CountryFlag } from "@/components/country-flag";
 
 interface ComparisonCardProps {
   breakdown: CostBreakdown;
@@ -69,7 +70,7 @@ export function ComparisonCard({ breakdown, currentCountry }: ComparisonCardProp
               }`}
             >
               <div className="flex items-center gap-2 sm:gap-3">
-                <span className="text-xl sm:text-2xl">{country.flag}</span>
+                <CountryFlag country={country.code} className="h-6 w-9 object-cover" />
                 <div>
                   <p className="font-semibold text-foreground text-xs sm:text-sm">{country.name}</p>
                   <p className="text-[10px] sm:text-xs text-muted-foreground font-mono">{country.currency}</p>

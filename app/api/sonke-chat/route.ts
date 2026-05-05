@@ -11,8 +11,8 @@ type ChatRequest = {
   context: SonkeChatContext;
 };
 
-function groqModel() {
-  return process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
+function geminiModel() {
+  return process.env.GEMINI_MODEL ?? "gemini-2.0-flash";
 }
 
 export async function POST(request: Request) {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ source: "error", reply: "Invalid request." }, { status: 400 });
   }
 
-  const apiKey = process.env.GROQ_API_KEY ?? process.env.AI_API_KEY;
+  const geminiApiKey = process.env.GOOGLE_API_KEY ?? process.env.GEMINI_API_KEY;
 
   const profileBlock = `Current profile:
 Country: ${body.context.countryName}
@@ -34,52 +34,65 @@ Difference: ${body.context.currencySymbol}${body.context.difference}
 Living total: ${body.context.currencySymbol}${body.context.totalLiving.toLocaleString()}
 Digital total: ${body.context.currencySymbol}${body.context.totalDigital.toLocaleString()}`;
 
-  if (!apiKey) {
+  if (!geminiApiKey) {
     return NextResponse.json({
       source: "fallback",
       reply: sonkeChatFallback(body),
-      hint: "Add GROQ_API_KEY to .env.local next to package.json.",
+      hint: "Add GOOGLE_API_KEY to .env.local next to package.json.",
     });
   }
 
   try {
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: groqModel(),
-        messages: [
-          {
-            role: "system",
-            content: SONKE_SYSTEM_PROMPT,
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel()}:generateContent?key=${geminiApiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: SONKE_SYSTEM_PROMPT }],
           },
-          {
-            role: "user",
-            content: `${profileBlock}\n\nUse these figures whenever the question is about money, affordability, or what to change.`,
-          },
-          ...body.messages,
-        ],
-        temperature: 0.45,
-      }),
-    });
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text: `${profileBlock}\n\nUse these figures whenever the question is about money, affordability, or what to change.`,
+                },
+              ],
+            },
+            ...body.messages.map((message) => ({
+              role: message.role === "assistant" ? "model" : "user",
+              parts: [{ text: message.content }],
+            })),
+          ],
+          generationConfig: { temperature: 0.45 },
+          tools: [{ google_search: {} }],
+        }),
+      }
+    );
 
     const rawText = await response.text();
-
     if (!response.ok) {
       if (process.env.NODE_ENV === "development") {
-        console.error("[sonke-chat] Groq error:", response.status, rawText.slice(0, 500));
+        console.error("[sonke-chat] Gemini error:", response.status, rawText.slice(0, 500));
       }
-      throw new Error(`Groq request failed with ${response.status}`);
+      if (response.status === 429) {
+        return NextResponse.json({
+          source: "fallback",
+          reply: sonkeChatFallback(body),
+          hint: "Gemini quota is currently exhausted on this API key, so Sonke is replying with offline rules.",
+        });
+      }
+      throw new Error(`Gemini request failed with ${response.status}`);
     }
 
-    const data = JSON.parse(rawText) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-    const reply =
-      data.choices?.[0]?.message?.content?.trim() || sonkeChatFallback(body);
+    const data = JSON.parse(rawText);
+    let reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
+
+    reply = reply || sonkeChatFallback(body);
 
     return NextResponse.json({
       source: "ai",

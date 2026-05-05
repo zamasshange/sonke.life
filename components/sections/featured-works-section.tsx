@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Country, COUNTRIES } from "@/lib/types";
+import { CountryFlag } from "@/components/country-flag";
 
 export interface CostProfile {
   id: string;
@@ -125,7 +126,10 @@ export function FeaturedWorksSection({
                       Tap to compare with your calculator numbers
                     </span>
                     <span className="text-xs font-black uppercase tracking-[0.22em] text-primary">
-                      {COUNTRIES[country].flag} {COUNTRIES[country].currency}
+                      <span className="inline-flex items-center gap-2">
+                        <CountryFlag country={country} className="h-4 w-6 object-cover" />
+                        {COUNTRIES[country].currency}
+                      </span>
                     </span>
                   </div>
                   <div className="grid gap-2 sm:grid-cols-3">

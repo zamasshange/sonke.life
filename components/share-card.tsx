@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Check, Download, FileText, ImageDown, Sparkles, TrendingUp, TrendingDown, Wallet, Zap, Wifi, CreditCard, PiggyBank, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toPng } from "html-to-image";
@@ -43,7 +43,6 @@ export function ShareCard({ breakdown, monthlyIncome, country }: ShareCardProps)
   const cardRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloaded, setDownloaded] = useState("");
-  const [activeQuote] = useState(Math.floor(Math.random() * motivationalQuotes.length));
 
   const { symbol, currency, name, flag } = COUNTRIES[country];
   const difference = monthlyIncome - breakdown.total;
@@ -67,6 +66,10 @@ export function ShareCard({ breakdown, monthlyIncome, country }: ShareCardProps)
     return Math.abs(hash).toString(36).toUpperCase();
   };
   const documentId = generateDocumentId();
+  const activeQuote = useMemo(() => {
+    const hash = parseInt(documentId.slice(0, 6), 36);
+    return Number.isFinite(hash) ? hash % motivationalQuotes.length : 0;
+  }, [documentId]);
 
   const formatCurrency = (amount: number) => {
     return `${symbol}${Math.abs(Math.round(amount)).toLocaleString()}`;
@@ -127,13 +130,14 @@ export function ShareCard({ breakdown, monthlyIncome, country }: ShareCardProps)
           <head>
             <title>Sonke Life Cost Statement</title>
             <style>
+              @page { size: A4 portrait; margin: 0; }
               body { margin: 0; background: #f3f3f3; font-family: 'Helvetica Neue', Arial, sans-serif; }
               .page { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
-              img { width: 100%; max-width: 820px; display: block; box-shadow: 0 20px 70px rgba(0,0,0,.12); }
+              img { width: 210mm; height: 297mm; object-fit: cover; display: block; box-shadow: 0 20px 70px rgba(0,0,0,.12); }
               @media print {
                 body { background: #fff; }
                 .page { padding: 0; min-height: auto; }
-                img { max-width: 100%; box-shadow: none; }
+                img { width: 210mm; height: 297mm; box-shadow: none; }
               }
             </style>
           </head>
@@ -176,8 +180,8 @@ export function ShareCard({ breakdown, monthlyIncome, country }: ShareCardProps)
 
       <div
         ref={cardRef}
-        className="bg-white p-4 sm:p-6 md:p-8 text-black shadow-lg relative overflow-hidden"
-        style={{ backgroundColor: "#FFFFFF" }}
+        className="mx-auto w-full max-w-[794px] min-h-[1123px] bg-white p-5 sm:p-6 md:p-8 text-black shadow-lg relative overflow-hidden"
+        style={{ backgroundColor: "#FFFFFF", aspectRatio: "210 / 297" }}
       >
         {/* Decorative gradient bar */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-orange-500 to-amber-600" />

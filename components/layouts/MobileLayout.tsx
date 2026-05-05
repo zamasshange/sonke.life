@@ -14,6 +14,9 @@ import { AiBudgetAdvisor } from "@/components/ai-budget-advisor";
 import { SonkeChatbot } from "@/components/sonke-chatbot";
 import { ComparisonCard } from "@/components/comparison-card";
 import { ShareCard } from "@/components/share-card";
+import { LiveKnowledgePanel } from "@/components/live-knowledge-panel";
+import { CurrencyConverterCard } from "@/components/currency-converter-card";
+import { CountryFlag } from "@/components/country-flag";
 import {
   Country,
   Mode,
@@ -410,6 +413,19 @@ export function MobileLayout({
           />
         </div>
 
+        <div className="mb-6 space-y-4">
+          <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            <span className="h-2 w-2 bg-primary" />
+            Money tools
+          </div>
+          <CurrencyConverterCard defaultCountry={country} />
+          <LiveKnowledgePanel
+            breakdown={breakdown}
+            monthlyIncome={monthlyIncome}
+            country={country}
+          />
+        </div>
+
         {/* Results and Insights - Collapsible */}
         <div className="space-y-2">
           <CollapsibleSection title="Results" defaultOpen={true}>
@@ -687,7 +703,7 @@ export function MobileLayout({
                 const countryItem = COUNTRIES[code];
                 return (
                   <div key={code} className="rounded-lg bg-black/25 p-2">
-                    <span className="text-xl">{countryItem.flag}</span>
+                    <CountryFlag country={code} className="h-5 w-8 object-cover" />
                     <p className="text-[10px] font-bold uppercase text-white/80">
                       {countryItem.code}
                     </p>

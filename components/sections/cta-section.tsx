@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Country, COUNTRIES } from "@/lib/types";
+import { CountryFlag } from "@/components/country-flag";
 
 const FEATURE_IMAGES = [
   "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=900&q=85&auto=format&fit=crop",
@@ -99,7 +100,7 @@ export function CtaSection({ heading, subheading }: CtaSectionProps) {
                   const countryItem = COUNTRIES[code];
                   return (
                     <div key={countryItem.code} className="border border-white/10 bg-black/25 p-3">
-                      <span className="text-2xl">{countryItem.flag}</span>
+                      <CountryFlag country={countryItem.code} className="h-6 w-9 object-cover" />
                       <p className="mt-2 text-xs font-bold uppercase tracking-wider text-white/80">
                         {countryItem.code}
                       </p>

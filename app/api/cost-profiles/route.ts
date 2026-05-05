@@ -57,13 +57,17 @@ const convertFromZA = (amountZar: number, country: Country) => {
   return Math.round((amountZar / base) * to);
 };
 
+function geminiModel() {
+  return process.env.GEMINI_MODEL ?? "gemini-2.0-flash";
+}
+
 export async function POST(request: Request) {
-  const apiKey = process.env.GROQ_API_KEY ?? process.env.AI_API_KEY;
+  const geminiApiKey = process.env.GOOGLE_API_KEY ?? process.env.GEMINI_API_KEY;
   const body = (await request.json().catch(() => ({}))) as { country?: Country };
   const country: Country = body.country && body.country in COUNTRIES ? body.country : "ZA";
   const countryInfo = COUNTRIES[country];
 
-  if (!apiKey) {
+  if (!geminiApiKey) {
     const profiles: Profile[] = fallbackProfilesZA().map((p) => ({
       id: p.id,
       title: p.title,
@@ -96,25 +100,34 @@ Return ONLY JSON:
 `;
 
   try {
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile",
-        messages: [
-          { role: "system", content: "Return only valid JSON. No markdown." },
-          { role: "user", content: prompt },
-        ],
-        temperature: 0.35,
-        response_format: { type: "json_object" },
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel()}:generateContent?key=${geminiApiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: "Return only valid JSON. No markdown." }],
+          },
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.35,
+            responseMimeType: "application/json",
+          },
+          tools: [{ google_search: {} }],
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Gemini request failed with ${response.status}`);
+    }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content ?? "{}";
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
+
     const parsed = JSON.parse(content) as { profiles?: Profile[] };
     const profiles = Array.isArray(parsed.profiles) ? parsed.profiles : [];
 

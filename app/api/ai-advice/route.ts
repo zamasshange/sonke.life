@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-function groqModel() {
-  return process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
+function geminiModel() {
+  return process.env.GEMINI_MODEL ?? "gemini-2.0-flash";
 }
 
 function parseAdviceJson(content: string): string[] {
@@ -58,13 +58,13 @@ const getFallbackAdvice = (body: AdviceRequest) => {
 
 export async function POST(request: Request) {
   const body = (await request.json()) as AdviceRequest;
-  const apiKey = process.env.GROQ_API_KEY ?? process.env.AI_API_KEY;
+  const geminiApiKey = process.env.GOOGLE_API_KEY ?? process.env.GEMINI_API_KEY;
 
-  if (!apiKey) {
+  if (!geminiApiKey) {
     return NextResponse.json({
       source: "fallback",
       advice: getFallbackAdvice(body),
-      note: "Add GROQ_API_KEY to the project-root .env.local to enable Groq AI advice.",
+      note: "Add GOOGLE_API_KEY to the project-root .env.local to enable AI advice.",
     });
   }
 
@@ -84,39 +84,45 @@ Return only this JSON shape: {"advice":["short recommendation","short recommenda
 `;
 
   try {
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: groqModel(),
-        messages: [
-          {
-            role: "system",
-            content: "You write concise, localized budgeting advice. Return only valid JSON.",
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel()}:generateContent?key=${geminiApiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: "You write concise, localized budgeting advice. Return only valid JSON." }],
           },
-          {
-            role: "user",
-            content: prompt,
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.35,
+            responseMimeType: "application/json",
           },
-        ],
-        temperature: 0.35,
-        response_format: { type: "json_object" },
-      }),
-    });
+          tools: [{ google_search: {} }],
+        }),
+      }
+    );
 
     if (!response.ok) {
       const errText = await response.text();
       if (process.env.NODE_ENV === "development") {
-        console.error("[ai-advice] Groq error:", response.status, errText.slice(0, 500));
+        console.error("[ai-advice] Gemini error:", response.status, errText.slice(0, 500));
       }
-      throw new Error(`Groq request failed with ${response.status}`);
+      if (response.status === 429) {
+        return NextResponse.json({
+          source: "fallback",
+          advice: getFallbackAdvice(body),
+          note: "Gemini quota is exhausted on this API key right now, so Sonke is using offline rules.",
+        });
+      }
+      throw new Error(`Gemini request failed with ${response.status}`);
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content ?? "{}";
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
+
     let advice: string[] = [];
     try {
       advice = parseAdviceJson(content);

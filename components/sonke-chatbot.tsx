@@ -19,9 +19,9 @@ interface SonkeChatbotProps {
 }
 
 const starterQuestions = [
-  "Hello",
-  "What should I cut first?",
-  "Can I survive this month?",
+  "Can I afford my current lifestyle this month?",
+  "What are my top 2 cost cuts this week?",
+  "How do I close my monthly gap fast?",
 ];
 
 export function SonkeChatbot({ breakdown, monthlyIncome, country }: SonkeChatbotProps) {

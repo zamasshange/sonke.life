@@ -33,6 +33,7 @@ export const sonkeChatFallback = (body: ChatRequest) => {
   const biggestArea = totalLiving >= totalDigital ? "living costs (rent, food, transport, power, data)" : "digital costs (internet, tools, subs, device)";
   const lastUserMessage = [...body.messages].reverse().find((message) => message.role === "user")?.content ?? "";
   const normalized = lastUserMessage.toLowerCase().trim();
+  const userIntent = lastUserMessage.trim();
   const absGap = Math.abs(difference);
   const prevAssistantMessage =
     [...body.messages].reverse().find((message) => message.role === "assistant")?.content ?? "";
@@ -100,7 +101,7 @@ export const sonkeChatFallback = (body: ChatRequest) => {
     return "I can definitely chat. If you want budget help, tell me one thing: do you want to cut costs, increase income, or check if this month is affordable?";
   }
 
-  return `You have ${sym}${difference.toLocaleString()} left after ${sym}${totalExpenses.toLocaleString()} in expenses. Set aside part of that before spending, and review ${biggestArea} first—small leaks there matter more than cutting tiny once-offs.`;
+  return `On your question "${userIntent}", here is the practical read: you have ${sym}${difference.toLocaleString()} left after ${sym}${totalExpenses.toLocaleString()} in expenses. Set aside part of that before spending, and review ${biggestArea} first; big buckets move results fastest.`;
 };
 
 export const SONKE_SYSTEM_PROMPT = `You are Sonke, inside a web app for “real cost of living + digital life,” with a South Africa-first lens (ZAR, local examples) and global respect.
@@ -112,4 +113,5 @@ Behaviours:
 - You may answer greetings and small talk naturally, then steer to budget when relevant.
 - If user asks normal conversation (e.g. "how are you"), answer naturally first, then offer one useful budgeting next step.
 - No legal, tax, or investment advice. No medical advice.
-- Keep replies under 120 words unless the user asks for a list. Use simple bullets when it helps.`;
+- Keep replies under 120 words unless the user asks for a list. Use simple bullets when it helps.
+- Speak like a real human coach, not a scripted bot.`;

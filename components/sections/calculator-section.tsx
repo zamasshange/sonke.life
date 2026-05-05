@@ -21,6 +21,8 @@ import { AiBudgetAdvisor } from "@/components/ai-budget-advisor";
 import { SonkeChatbot } from "@/components/sonke-chatbot";
 import { ComparisonCard } from "@/components/comparison-card";
 import { ShareCard } from "@/components/share-card";
+import { LiveKnowledgePanel } from "@/components/live-knowledge-panel";
+import { CurrencyConverterCard } from "@/components/currency-converter-card";
 
 function FadeInSection({
   children,
@@ -128,6 +130,13 @@ export function CalculatorSection({
               Choose a mode, tune the real amounts, then use the result as a practical snapshot
               of what your life costs before savings, surprises or ambition.
             </p>
+          </div>
+        </FadeInSection>
+
+        <FadeInSection delay={0.04}>
+          <div className="mb-8 grid gap-4 lg:grid-cols-2">
+            <CurrencyConverterCard defaultCountry={country} />
+            <LiveKnowledgePanel breakdown={breakdown} monthlyIncome={monthlyIncome} country={country} />
           </div>
         </FadeInSection>
 

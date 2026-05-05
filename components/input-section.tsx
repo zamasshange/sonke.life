@@ -26,6 +26,7 @@ import {
   JOB_INCOMES,
   scaleCurrency,
 } from "@/lib/types";
+import { CountryFlag } from "@/components/country-flag";
 
 type BudgetPeriod = "weekly" | "monthly" | "yearly";
 
@@ -327,7 +328,7 @@ export function InputSection({
                 {Object.values(COUNTRIES).map((c) => (
                   <SelectItem key={c.code} value={c.code}>
                     <span className="flex items-center gap-2">
-                      <span className="text-base leading-none">{c.flag}</span>
+                      <CountryFlag country={c.code} className="h-4 w-6 object-cover" />
                       <span>{c.name}</span>
                     </span>
                   </SelectItem>
