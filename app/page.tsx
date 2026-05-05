@@ -606,9 +606,9 @@ export default function SonkeCalculator() {
             </div>
           </FadeInSection>
 
-          <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+          <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
             <FadeInSection>
-              <div className="border border-black/15 bg-[#f6f6f6] p-3 sm:p-5">
+              <div className="border border-black/15 bg-[#f6f6f6] p-2 sm:p-4 md:p-5">
                 <InputSection
                   country={country}
                   setCountry={handleCountryChange}
@@ -638,7 +638,7 @@ export default function SonkeCalculator() {
             </FadeInSection>
 
             <FadeInSection delay={0.08}>
-              <div className="sticky top-28 space-y-6">
+              <div className="sticky top-20 sm:top-28 space-y-4 sm:space-y-6">
                 <ResultsCard breakdown={breakdown} monthlyIncome={monthlyIncome} country={country} budgetPeriod={budgetPeriod} />
                 <CostTips
                   breakdown={breakdown}

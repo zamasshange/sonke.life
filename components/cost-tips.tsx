@@ -90,7 +90,9 @@ export function CostTips({ breakdown, subscriptions, tools, internetCost, living
 
   const activeTips = tips.filter(tip => tip.condition({ breakdown, subscriptions, tools, internetCost, livingCosts, country }));
 
-  const randomTip = savingsTips[Math.floor(Math.random() * savingsTips.length)];
+  // Deterministic tip selection based on country to avoid hydration mismatch
+  const countryIndex = Object.keys(COUNTRIES).indexOf(country);
+  const randomTip = savingsTips[countryIndex % savingsTips.length];
 
   return (
     <motion.div

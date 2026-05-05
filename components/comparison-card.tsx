@@ -51,7 +51,7 @@ export function ComparisonCard({ breakdown, currentCountry }: ComparisonCardProp
         Equivalent costs in different countries:
       </p>
       
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         {visibleCountries.map((country, index) => {
           const isCurrentCountry = country.code === currentCountry;
           const equivalentCost = getEquivalentCost(country.code);
@@ -62,17 +62,17 @@ export function ComparisonCard({ breakdown, currentCountry }: ComparisonCardProp
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${
+              className={`flex items-center justify-between p-3 sm:p-4 rounded-lg transition-all duration-200 ${
                 isCurrentCountry
                   ? "bg-primary/10 border border-primary/30"
                   : "bg-secondary/50 border border-border/50 hover:border-border"
               }`}
             >
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{country.flag}</span>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <span className="text-xl sm:text-2xl">{country.flag}</span>
                 <div>
-                  <p className="font-semibold text-foreground text-sm">{country.name}</p>
-                  <p className="text-xs text-muted-foreground font-mono">{country.currency}</p>
+                  <p className="font-semibold text-foreground text-xs sm:text-sm">{country.name}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground font-mono">{country.currency}</p>
                 </div>
               </div>
               <div className="text-right">
@@ -80,12 +80,12 @@ export function ComparisonCard({ breakdown, currentCountry }: ComparisonCardProp
                   key={equivalentCost}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className={`font-bold font-mono text-lg ${isCurrentCountry ? "text-primary" : "text-foreground"}`}
+                  className={`font-bold font-mono text-sm sm:text-lg ${isCurrentCountry ? "text-primary" : "text-foreground"}`}
                 >
                   {formatCurrency(equivalentCost, country.code)}
                 </motion.p>
                 {isCurrentCountry && (
-                  <span className="text-xs text-primary font-semibold uppercase tracking-wider">
+                  <span className="text-[8px] sm:text-xs text-primary font-semibold uppercase tracking-wider">
                     YOUR LOCATION
                   </span>
                 )}

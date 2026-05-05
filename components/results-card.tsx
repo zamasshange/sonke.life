@@ -73,23 +73,23 @@ export function ResultsCard({ breakdown, monthlyIncome, country, budgetPeriod = 
           </motion.div>
 
           {/* Living vs Digital Split */}
-          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/50">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-500/10">
-                <Home className="h-4 w-4 text-blue-400" />
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-border/50">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-1.5 sm:p-2 bg-blue-500/10">
+                <Home className="h-3 w-3 sm:h-4 sm:w-4 text-blue-400" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">Living</p>
-                <p className="font-mono font-semibold text-foreground">{formatCurrency(breakdown.totalLiving)}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Living</p>
+                <p className="font-mono font-semibold text-foreground text-sm sm:text-base">{formatCurrency(breakdown.totalLiving)}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-500/10">
-                <Wifi className="h-4 w-4 text-purple-400" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-1.5 sm:p-2 bg-purple-500/10">
+                <Wifi className="h-3 w-3 sm:h-4 sm:w-4 text-purple-400" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">Digital</p>
-                <p className="font-mono font-semibold text-foreground">{formatCurrency(breakdown.totalDigital)}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Digital</p>
+                <p className="font-mono font-semibold text-foreground text-sm sm:text-base">{formatCurrency(breakdown.totalDigital)}</p>
               </div>
             </div>
           </div>
@@ -193,31 +193,31 @@ export function ResultsCard({ breakdown, monthlyIncome, country, budgetPeriod = 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="grid grid-cols-3 gap-3"
+        className="grid grid-cols-3 gap-2 sm:gap-3"
       >
-        <div className="p-4 border border-border bg-card/30">
-          <div className="flex items-center gap-2 mb-2">
-            <Calendar className="h-3 w-3 text-muted-foreground" />
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Weekly</span>
+        <div className="p-2 sm:p-4 border border-border bg-card/30">
+          <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+            <Calendar className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-muted-foreground" />
+            <span className="text-[8px] sm:text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Weekly</span>
           </div>
-          <p className="font-mono text-lg font-bold text-foreground">
+          <p className="font-mono text-sm sm:text-lg font-bold text-foreground">
             {formatCurrency(breakdown.total / 4.33)}
           </p>
         </div>
-        <div className="p-4 bg-black text-white">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUpIcon className="h-3 w-3 text-white/70" />
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-white/70">Yearly</span>
+        <div className="p-2 sm:p-4 bg-black text-white">
+          <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+            <TrendingUpIcon className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white/70" />
+            <span className="text-[8px] sm:text-[10px] font-semibold uppercase tracking-widest text-white/70">Yearly</span>
           </div>
-          <p className="font-mono text-lg font-bold text-white">
+          <p className="font-mono text-sm sm:text-lg font-bold text-white">
             {formatCurrency(breakdown.total * 12)}
           </p>
         </div>
-        <div className="p-4 border border-border bg-card/30">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Daily</span>
+        <div className="p-2 sm:p-4 border border-border bg-card/30">
+          <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+            <span className="text-[8px] sm:text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Daily</span>
           </div>
-          <p className="font-mono text-lg font-bold text-foreground">
+          <p className="font-mono text-sm sm:text-lg font-bold text-foreground">
             {formatCurrency(breakdown.total / 30)}
           </p>
         </div>
