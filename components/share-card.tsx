@@ -55,6 +55,19 @@ export function ShareCard({ breakdown, monthlyIncome, country }: ShareCardProps)
     day: "numeric",
   }).format(new Date());
 
+  // Deterministic document ID based on breakdown data to avoid hydration mismatch
+  const generateDocumentId = () => {
+    const dataStr = JSON.stringify({ breakdown, monthlyIncome, country });
+    let hash = 0;
+    for (let i = 0; i < dataStr.length; i++) {
+      const char = dataStr.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash).toString(36).toUpperCase();
+  };
+  const documentId = generateDocumentId();
+
   const formatCurrency = (amount: number) => {
     return `${symbol}${Math.abs(Math.round(amount)).toLocaleString()}`;
   };
@@ -195,7 +208,7 @@ export function ShareCard({ breakdown, monthlyIncome, country }: ShareCardProps)
               <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-black/40">Statement Date</p>
               <p className="mt-1 font-mono font-bold text-black text-sm sm:text-lg">{generatedDate}</p>
               <p className="mt-2 sm:mt-4 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-black/40">Document ID</p>
-              <p className="font-mono text-xs text-black/60">SK-{Date.now().toString(36).toUpperCase()}</p>
+              <p className="font-mono text-xs text-black/60">SK-{documentId}</p>
             </div>
           </div>
         </div>
